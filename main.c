@@ -18,12 +18,11 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "../display.h"
-#include "../keypad.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "../display.h"
+#include "../keypad.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -41,7 +40,6 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
 
@@ -50,7 +48,6 @@ UART_HandleTypeDef huart2;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
-static void MX_USART2_UART_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -87,41 +84,42 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
-
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	 int freq , milhares , centenas, dezenas , unidades;
+	 int v , milhares , centenas, dezenas , unidades;
 
-	 //get tone frequency
-	 freq = USR_KEYPAD_GetFrequency();
+	 v = USR_KEYPAD_GetFrequency();
 
-
-	 milhares = freq / 1000;
-	 freq -= milhares * 1000;
-
-	 centenas = freq / 100;
-	 freq -= centenas * 100;
-
-	 dezenas = freq / 10;
-	 freq -= dezenas * 10;
-
-	 unidades = freq;
-
-	 char d1 = (char)(milhares + 48);
-	 char d2 = (char)(centenas + 48);
-	 char d3 = (char)(dezenas  + 48);
-	 char d4 = (char)(unidades);
-
-	 USR_DISPLAY_SetString(d1 , d2 , d3 , d4);
+	 if(v != 0)
+	 {
 
 
 
+		 milhares = v / 1000;
+		 v -= milhares * 1000;
+
+		 centenas = v / 100;
+		 v -= centenas * 100;
+
+		 dezenas = v / 10;
+		 v -= dezenas * 10;
+		 unidades = v;
+
+		 char d1 = (char)(milhares + 48);
+		 char d2 = (char)(centenas + 48);
+		 char d3 = (char)(dezenas  + 48);
+		 char d4 = (char)(unidades + 48);
+
+
+
+		  USR_DISPLAY_SetString(d4,d3,d2,d1);
+
+	 }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -174,39 +172,6 @@ void SystemClock_Config(void)
 }
 
 /**
-  * @brief USART2 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_USART2_UART_Init(void)
-{
-
-  /* USER CODE BEGIN USART2_Init 0 */
-
-  /* USER CODE END USART2_Init 0 */
-
-  /* USER CODE BEGIN USART2_Init 1 */
-
-  /* USER CODE END USART2_Init 1 */
-  huart2.Instance = USART2;
-  huart2.Init.BaudRate = 115200;
-  huart2.Init.WordLength = UART_WORDLENGTH_8B;
-  huart2.Init.StopBits = UART_STOPBITS_1;
-  huart2.Init.Parity = UART_PARITY_NONE;
-  huart2.Init.Mode = UART_MODE_TX_RX;
-  huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  huart2.Init.OverSampling = UART_OVERSAMPLING_16;
-  if (HAL_UART_Init(&huart2) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN USART2_Init 2 */
-
-  /* USER CODE END USART2_Init 2 */
-
-}
-
-/**
   * @brief GPIO Initialization Function
   * @param None
   * @retval None
@@ -222,7 +187,14 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0|LD2_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, D3_Pin|SEGP_Pin|D0_Pin|SEGC_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOC, BUZZER_Pin|SEGB_Pin|D1_Pin|SEGA_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOB, SEGG_Pin|SEGD_Pin|SEGF_Pin|SEGE_Pin
+                          |D2_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : B1_Pin */
   GPIO_InitStruct.Pin = B1_Pin;
@@ -230,12 +202,46 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(B1_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PA0 LD2_Pin */
-  GPIO_InitStruct.Pin = GPIO_PIN_0|LD2_Pin;
+  /*Configure GPIO pins : ROW1_Pin ROW2_Pin */
+  GPIO_InitStruct.Pin = ROW1_Pin|ROW2_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : COL2_Pin COL1_Pin ROW4_Pin */
+  GPIO_InitStruct.Pin = COL2_Pin|COL1_Pin|ROW4_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : D3_Pin SEGP_Pin D0_Pin SEGC_Pin */
+  GPIO_InitStruct.Pin = D3_Pin|SEGP_Pin|D0_Pin|SEGC_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : BUZZER_Pin SEGB_Pin D1_Pin SEGA_Pin */
+  GPIO_InitStruct.Pin = BUZZER_Pin|SEGB_Pin|D1_Pin|SEGA_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : ROW3_Pin COL3_Pin */
+  GPIO_InitStruct.Pin = ROW3_Pin|COL3_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : SEGG_Pin SEGD_Pin SEGF_Pin SEGE_Pin
+                           D2_Pin */
+  GPIO_InitStruct.Pin = SEGG_Pin|SEGD_Pin|SEGF_Pin|SEGE_Pin
+                          |D2_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
 }
 

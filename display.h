@@ -10,37 +10,12 @@
 
 #include "stm32f4xx_hal.h"
 
+#include "Inc/main.h"
 
 
-/*	ASSUMINDO QUE OS SEGMENTOS ESTÃO NO SEGUINTE FORMATO
- *
- *
- *
- *   AAAAAAA
- *  F       B
- *  F       B
- *   GGGGGGG
- *  E		C
- *  E		C
- *   DDDDDDD  .DP
- *
- *   DISPLAY 0              DISPLAY 1  ...
- *
- */
 
-//DEFINE OUTPUT PINS HERE!
-#define SEGA GPIO_PIN_0
-#define SEGB 0
-#define SEGC 0
-#define SEGD 0
-#define SEGE 0
-#define SEGF 0
-#define SEGG 0
-#define SEGP 0 //PONTO .  (DP)
-#define DISP0 0
-#define DISP1 0
-#define DISP2 0
-#define DISP3 0
+
+
 
 //"PUBLIC"
 

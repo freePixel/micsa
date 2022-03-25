@@ -11,15 +11,15 @@
 #include <string.h>
 
 
-void USR_KEYPAD_GetInput(char* data)
+void USR_KEYPAD_GetInput(GPIO_PinState* data)
 {
-	data[0] = (char)(HAL_GPIO_ReadPin(GPIOA , ROW1) + 48);
-	data[1] = (char)(HAL_GPIO_ReadPin(GPIOA , ROW2) + 48);
-	data[2] = (char)(HAL_GPIO_ReadPin(GPIOA , ROW3) + 48);
-	data[3] = (char)(HAL_GPIO_ReadPin(GPIOA , ROW4) + 48);
-	data[4] = (char)(HAL_GPIO_ReadPin(GPIOA , COL1) + 48);
-	data[5] = (char)(HAL_GPIO_ReadPin(GPIOA , COL2) + 48);
-	data[6] = (char)(HAL_GPIO_ReadPin(GPIOA , COL3) + 48);
+	*data = 	(HAL_GPIO_ReadPin(ROW1_GPIO_Port,  ROW1_Pin));
+	*(data+1) = (HAL_GPIO_ReadPin(ROW2_GPIO_Port , ROW2_Pin));
+	*(data+2) = (HAL_GPIO_ReadPin(ROW3_GPIO_Port , ROW3_Pin));
+	*(data+3) = (HAL_GPIO_ReadPin(ROW4_GPIO_Port , ROW4_Pin));
+	*(data+4) = (HAL_GPIO_ReadPin(COL1_GPIO_Port , COL1_Pin));
+	*(data+5) = (HAL_GPIO_ReadPin(COL2_GPIO_Port , COL2_Pin));
+	*(data+6) = (HAL_GPIO_ReadPin(COL3_GPIO_Port , COL3_Pin));
 }
 
 
@@ -29,18 +29,14 @@ static int tones[] = {697,770,852,941,1209,1336,1477};
 
 int USR_KEYPAD_GetFrequency()
 {
-	char* arr = malloc(7);
+	GPIO_PinState* arr = malloc(7);
 	int out_freq = 0;
 	USR_KEYPAD_GetInput(arr);
 
 	for(int i=0;i<4;i++)
 	{
-		for(int j=0;i<3;j++)
-		{
-			if(arr[i] == '1' && arr[4 + j] == '1')
-				out_freq += tones[i] + tones[4+j];
-
-		}
+		if(arr[i] == GPIO_PIN_RESET)
+			out_freq += 1;
 	}
 
 	free(arr);
