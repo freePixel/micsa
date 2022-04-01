@@ -14,13 +14,12 @@
 
 
 
-//DEFINIR PINOS AQUI!
 
 
 
+void USR_KEYPAD_ActivateRow(int n);
 
-
-void USR_KEYPAD_GetInput(GPIO_PinState* data);/*
+char USR_KEYPAD_GetInput();/*
 
 Load keypad data into data array, format: ROW1 , ROW2 , ROW3 , ROW4 , COL1 , COL2 , COL3
 */

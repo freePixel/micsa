@@ -9,6 +9,11 @@
 #include <stdlib.h>
 #include <string.h>
 
+
+
+
+
+
 void USR_DISPLAY_SetString(char n1 , char n2 , char n3 , char n4)
 {
 	//allocate space
@@ -26,21 +31,22 @@ void USR_DISPLAY_SetString(char n1 , char n2 , char n3 , char n4)
 	USR_DISPLAY_ActivateSeg(0);
 	USR_DISPLAY_SetSegment(_n1);
 
-	HAL_Delay(5);
+	HAL_Delay(1);
+
 
 	USR_DISPLAY_ActivateSeg(1);
 	USR_DISPLAY_SetSegment(_n2);
 
-	HAL_Delay(5);
+	HAL_Delay(1);
 	USR_DISPLAY_ActivateSeg(2);
 	USR_DISPLAY_SetSegment(_n3);
 
-	HAL_Delay(5);
+	HAL_Delay(1);
 
 	USR_DISPLAY_ActivateSeg(3);
 	USR_DISPLAY_SetSegment(_n4);
 
-	HAL_Delay(5);
+	HAL_Delay(1);
 
 	//free memory
 	free(_n1);
@@ -101,7 +107,11 @@ void USR_DISPLAY_SetString(char n1 , char n2 , char n3 , char n4)
 		break;
 
 	case 'x':
-		strcpy(data , "00000000");
+		strcpy(data , "11111111");
+		break;
+
+	case '-':
+		strcpy(data , "11111101");
 		break;
 
 	}

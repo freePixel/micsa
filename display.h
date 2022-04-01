@@ -19,7 +19,7 @@
 
 //"PUBLIC"
 
-//coloca o valor no segmento ex: USR_DISPLAY_SetString('2' , '3' , 'a' , 'b') deve aparecer no display o valor 23ab
+//coloca o valor no segmento ex: USR_DISPLAY_SetString('2' , '3' , '1' , '5') deve aparecer no display o valor 2315
 void USR_DISPLAY_SetString(char n1 , char n2 , char n3 , char n4);
 
 //"PRIVATE"
@@ -30,6 +30,8 @@ void USR_DISPLAY_SetSegment(char* arr);
 
 //ativa o segmento n, (0 à esquerda , 3 à direita)
 void USR_DISPLAY_ActivateSeg(int n);
+
+
 void USR_DISPLAY_DecodeChar(char value , char* s);
 
 
